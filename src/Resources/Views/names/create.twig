@@ -1,0 +1,51 @@
+<div class="col-sm-12">
+	<form action="{{ route('donny5300.translations.names.'~action, item.id) }}" method="post" class="form-horizontal">
+		{{ csrf_field() }}
+		<div class="form-group">
+			<label for="" class="control-label col-sm-3">Title</label>
+			<div class="col-sm-9">
+				<input type="text" name="title" value="{{ old('title', item.title) }}" class="form-control">
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label for="" class="control-label col-sm-3">Description</label>
+			<div class="col-sm-9">
+				<textarea name="description" id="" cols="30" rows="10" class="form-control">{{ old('description', item.description) }}</textarea>
+			</div>
+		</div>
+
+
+
+		<div class="form-group">
+			<label for="" class="control-label col-sm-3">Append to group</label>
+			<div class="col-sm-9">
+				<select name="group_id" id="" class="form-control">
+					{% for key,group in groups %}
+						<option value="{{ key }}" {{ old('group_id', item.group_id) == key ? 'selected' }}>{{ group }}</option>
+					{% endfor %}
+				</select>
+			</div>
+		</div>
+
+		<hr>
+
+		<h3 class="text-center">Translation values</h3>
+
+		{% for language in languages %}
+			<div class="form-group">
+				<label for="" class="control-label col-sm-3">{{ language.title }}</label>
+				<div class="col-sm-9">
+					<input type="text" name="translation_values[{{ language.id }}]" value="{{ old('translation_value.' ~ language.id) }}" class="form-control">
+				</div>
+			</div>
+		{% endfor %}
+
+		<div class="form-group">
+			<div class="col-sm-9 col-sm-offset-3">
+				<input type="submit" class="btn btn-success" value="Save">
+			</div>
+		</div>
+
+	</form>
+</div>

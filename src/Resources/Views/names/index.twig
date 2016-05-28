@@ -1,0 +1,24 @@
+<table class="table table-responsive table-striped">
+	<thead>
+		<tr>
+			<td># ID</td>
+			<td>Title</td>
+		</tr>
+	</thead>
+
+	<tbody>
+		{% for item in groups %}
+			<tr>
+				<td>{{ item.id }}</td>
+				<td>{{ item.title }}</td>
+				<td>
+					<form action="{{ route('donny5300.translations.languages.destroy', item.id) }}" method="post" class="btn-group">
+						<a href="/system/languages/{{ item.id }}/edit" class="btn btn-info">Edit</a>
+						{{ csrf_field() }}
+						<input type="submit" value="Delete" class="btn btn-danger">
+					</form>
+				</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>

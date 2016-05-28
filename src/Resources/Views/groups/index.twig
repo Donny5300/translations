@@ -1,0 +1,26 @@
+<table class="table table-responsive table-striped">
+	<thead>
+		<tr>
+			<td># ID</td>
+			<td>Title</td>
+		</tr>
+	</thead>
+
+	<tbody>
+		{% for key,item in groups %}
+			<tr>
+				<td>{{ key }}</td>
+				<td>{{ item }}</td>
+				<td>
+					<form action="{{ route('donny5300.translations.groups.destroy', key) }}" method="post" class="btn-group">
+						<a href="/system/translations/groups/{{ key }}/edit" class="btn btn-info">Edit group</a>
+						{{ csrf_field() }}
+						<input type="submit" value="Delete" class="btn btn-danger">
+						<a href="{{ route('donny5300.translations.names.edit', key) }}" class="btn btn-success">Edit names</a>
+
+					</form>
+				</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>
