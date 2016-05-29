@@ -121,12 +121,33 @@ class TranslationBuilder
 	}
 
 	/**
+	 * @param        $in
+	 * @param        $out
+	 * @param string $path
+	 */
+	public function createList( $in, &$out, $path = '' )
+	{
+		foreach( $in as $data )
+		{
+			$title            = ltrim( $path . $this->getDelimeter() . $data['title'], $this->getDelimeter() );
+			$out[$data['id']] = $title;
+			if( count( $data['groups'] ) > 0 )
+			{
+				$this->createList( $data['groups'], $out, $title );
+			}
+		}
+	}
+
+	/**
 	 * @return $this
 	 */
 	public function build()
 	{
+
 		$this->setGroups();
-		$this->setDotGroups( $this->groups );
+
+		$this->createList( $this->groups, $this->dottedGroups );
+
 		$this->setCache();
 
 		return $this;
@@ -137,9 +158,12 @@ class TranslationBuilder
 	 */
 	public function render()
 	{
-		return array_filter( $this->dottedGroups );
+		return $this->dottedGroups;
 	}
 
+	/**
+	 * @return array
+	 */
 	public function renderTranslations()
 	{
 
