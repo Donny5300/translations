@@ -77,7 +77,6 @@ class TranslationBuilder
 		return $this;
 	}
 
-
 	/**
 	 *
 	 */
@@ -90,10 +89,6 @@ class TranslationBuilder
 				->whereNull( 'group_id' )
 				->get( [ 'id', 'title', 'group_id' ] )
 				->toArray();
-
-//			$this->setCache();
-
-//			dd('File: ' . __FILE__, 'Line: '. __LINE__ , $this->groups);
 
 			return;
 		}

@@ -39,15 +39,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 	{
 		$this->config = config( 'translations' );
 
-		app()->singleton( 'translations', function ( $provider )
-		{
-			$provider['translations'] = ( new TranslationBuilder() )
-				->build()
-				->getTranslations();
-
-			return $provider;
-		} );
-
 		$assetsPath = __DIR__ . '/../assets';
 		$migration  = __DIR__ . '/../migrations';
 		$configPath = __DIR__ . '/../config/translations.php';
