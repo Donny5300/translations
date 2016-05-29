@@ -81,7 +81,7 @@ class NamesController extends BaseController
 				$this->valueModel->storeOrUpdate( $name->id, $value, $languageId );
 			}
 
-			return $this->backToIndex();
+			return redirect()->back()->with('message', 'Created!');
 		}
 
 		return $this->backWithFailed();
@@ -124,7 +124,7 @@ class NamesController extends BaseController
 			}
 		}
 
-		return $this->backToIndex( 'Items are saved!' );
+		return redirect()->back()->with('message', 'Values are updated!');
 	}
 
 	/**
