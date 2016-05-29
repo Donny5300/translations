@@ -14,7 +14,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Donny5300\\ModulairRouter\\": "src"
+      "Donny5300\\Translations\\": "src"
     }
   }
 }
