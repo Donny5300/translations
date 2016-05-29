@@ -1,7 +1,7 @@
 {
-  "name": "donny5300/modulair-router",
-  "description": "Laravel Modulair routing mechanism.",
-  "keywords": ["laravel", "routing", "modules", "system management"],
+  "name": "donny5300/translations",
+  "description": "Laravel database translations.",
+  "keywords": ["laravel", "translations"],
   "license": "MIT",
   "authors": [
     {
@@ -10,12 +10,7 @@
     }
   ],
   "require": {
-    "php": ">=7",
-    "illuminate/support": "5.0.x|5.1.x|5.2.x|5.3.x",
-    "illuminate/console": "5.0.x|5.1.x|5.2.x|5.3.x",
-    "illuminate/filesystem": "5.0.x|5.1.x|5.2.x|5.3.x",
-    "phpdocumentor/reflection-docblock": "^2.0.4",
-    "symfony/class-loader": "~2.3|~3.0"
+    "php": ">=5"
   },
   "autoload": {
     "psr-4": {

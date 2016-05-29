@@ -23,8 +23,6 @@ class TranslationsController extends Controller
 	 */
 	public function translations()
 	{
-		dump( translate( 'form.created_at' ) );
-
 		return $this->groups;
 	}
 
