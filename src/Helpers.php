@@ -36,17 +36,17 @@
 				}
 			}
 
+			if( env( 'APP_DEBUG' ) )
+			{
+				$missing = session()->get( 'missing_translations', [ ] );
+
+				if( !in_array( $key, $missing ) )
+				{
+					session()->push( 'missing_translations', $key );
+				}
+			}
+
 			return $currentLanguage . ':' . $key;
 
-		}
-	}
-
-	function createList($in, &$out, $path='') {
-		foreach ($in as $data) {
-			$title = ltrim($path.'.'.$data['title'], '.');
-			$out[$data['id']] = $title;
-			if (count($data['groups']) > 0) {
-				createList($data['groups'], $out, $title);
-			}
 		}
 	}

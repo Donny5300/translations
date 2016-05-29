@@ -33,6 +33,11 @@
 		Route::get( 'system/translations/clean-up', [ 'as' => 'donny5300.translations.clean', 'uses' => 'Donny5300\Translations\Controllers\CleanUpController@cleanUp' ] );
 		Route::get( 'system/translations/clean-up/restore-all', [ 'as' => 'donny5300.translations.clean', 'uses' => 'Donny5300\Translations\Controllers\CleanUpController@restore' ] );
 		Route::get( 'system/translations/clean-up/delete-all', [ 'as' => 'donny5300.translations.clean', 'uses' => 'Donny5300\Translations\Controllers\CleanUpController@delete' ] );
+
+		Route::get( 'system/translations/missing', [ 'as' => 'donny5300.translations.missing_translations', 'uses' => 'Donny5300\Translations\Controllers\MissingTranslationsController@index' ] );
+		Route::post( 'system/translations/missing', [ 'as' => 'donny5300.translations.missing_translations', 'uses' => 'Donny5300\Translations\Controllers\MissingTranslationsController@store' ] );
+
+
 		Route::get( 'translations', 'Donny5300\Translations\Controllers\TranslationsController@translations' );
 	} );
 

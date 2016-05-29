@@ -12,6 +12,8 @@ class Group extends BaseModel
 	 */
 	protected $table = 'groups';
 
+
+
 	/**
 	 *
 	 */
