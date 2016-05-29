@@ -114,6 +114,16 @@ class NamesController extends BaseController
 			$this->dataModel->updateItem( $key, $value, $this->getGroupId( $key, $groups ) );
 		}
 
+
+		foreach( $request->get( 'values', [ ] ) as $key => $language )
+		{
+			foreach( $language as $languageKey => $value )
+			{
+				$this->valueModel->storeOrUpdate( $key, $value, $languageKey );
+
+			}
+		}
+
 		return $this->backToIndex( 'Items are saved!' );
 	}
 

@@ -34,6 +34,7 @@ class BaseModel extends Model
 			self::$method( function ( $item ) use ( $method )
 			{
 				app( 'cache' )->forget( 'translation_groups' );
+				app( 'cache' )->forget( 'translations' );
 			} );
 		}
 	}

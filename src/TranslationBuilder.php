@@ -147,7 +147,7 @@ class TranslationBuilder
 
 	public function renderTranslations()
 	{
-		
+
 		if( $this->cache->has( 'translations' ) )
 		{
 			return $this->cache->get( 'translations' );
@@ -158,21 +158,21 @@ class TranslationBuilder
 
 		foreach( $items as $language )
 		{
-			if( !array_key_exists( $language->title_short_two, $translations ) )
+			if( !array_key_exists( strtolower( $language->title_short_two ), $translations ) )
 			{
-				$translations[$language->title_short_two] = [ ];
+				$translations[strtolower( $language->title_short_two )] = [ ];
 			}
 
 			foreach( $language->values as $value )
 			{
-				$translation                                            = $this->getFullTranslation( $value );
-				$translations[$language->title_short_two][$translation] = $value->title;
+				$translation                                                          = $this->getFullTranslation( $value );
+				$translations[strtolower( $language->title_short_two )][$translation] = $value->title;
 
 			}
 		}
 
 		$this->cache->forever( 'translations', $translations );
-		
+
 
 		return $translations;
 	}

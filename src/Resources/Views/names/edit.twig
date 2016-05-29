@@ -15,20 +15,13 @@
 					<td>
 						<div class="row">
 							<div class="col-sm-10">
-								<div class="form-group">
-									<select name="group_id[{{ item.id }}]" id="" class="form-control hidden">
-										{% for groupKey,group in groups %}
-											<option value="{{ groupKey }}" {{ old('group_id.'~item.id, item.group_id)  == groupKey ? 'selected' }}>{{ group }}</option>
-										{% endfor %}
-									</select>
-								</div>
 							{% for value in item.values %}
 								<div class="form-group">
 									<label for="" class="control-label col-sm-4">
 										{{ languages[value.language_id] }}
 									</label>
 									<div class="col-sm-8">
-										<input type="text" class="form-control" value="{{ value.title }}">
+										<input type="text" name="values[{{ item.id }}][{{ value.language_id }}]" class="form-control" value="{{ value.title }}">
 									</div>
 								</div>
 							{% endfor %}
