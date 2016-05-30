@@ -21,7 +21,7 @@
 
 			if( array_key_exists( $currentLanguage, $translations ) )
 			{
-				if( array_key_exists( $key, $translations[$currentLanguage] ) )
+				if( array_key_exists( $key, $translations[$currentLanguage] ) && !empty( $translations[$currentLanguage][$key] ) )
 				{
 					$translation = $translations[$currentLanguage][$key];
 					foreach( $arguments as $key => $value )
