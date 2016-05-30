@@ -30,7 +30,7 @@
 				<span class="icon-bar"></span>
 			</button>
 
-			<a class="navbar-brand" href="#">D5300 Router</a>
+			<a class="navbar-brand" href="#">D5300 Translations</a>
 		</div>
 
 		<!-- Collect the nav links, forms, and other content for toggling -->
@@ -119,6 +119,21 @@
 	{
 		jq(this).toggleClass('btn-success btn-primary');
 		jq(this).closest('.row').find('select').toggleClass('hidden');
+	});
+
+	var checked = false;
+	jq('.select-all').click(function ()
+	{
+		var checkbox = jq('table input[type="checkbox"]');
+
+		if ( !checked )
+		{
+			checked = true;
+			checkbox.prop('checked', true);
+		} else {
+			checked = false;
+			checkbox.prop('checked', false);
+		}
 	});
 
 </script>

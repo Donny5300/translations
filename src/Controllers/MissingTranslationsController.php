@@ -63,7 +63,7 @@ class MissingTranslationsController extends BaseController
 
 		session()->forget( 'missing_translations' );
 
-		return $this->backToIndex();
+		return redirect()->to('/system/translations/groups');
 	}
 
 }
