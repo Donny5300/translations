@@ -35,7 +35,6 @@
 				$table->string( 'short_two' );
 				$table->string( 'short_three' );
 				$table->timestamps();
-				$table->softDeletes();
 			} );
 
 			Schema::create( 'groups', function ( Blueprint $table )
