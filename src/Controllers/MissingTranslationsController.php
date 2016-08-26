@@ -6,11 +6,26 @@ use Donny5300\Translations\Models\Name;
 use Donny5300\Translations\Models\Value;
 use Illuminate\Http\Request;
 
+/**
+ * Class MissingTranslationsController
+ *
+ * @package Donny5300\Translations\Controllers
+ */
 class MissingTranslationsController extends BaseController
 {
-
+	/**
+	 * @var string
+	 */
 	protected $viewPath = 'missing_translations';
 
+	/**
+	 * MissingTranslationsController constructor.
+	 *
+	 * @param Language $lang
+	 * @param Name     $name
+	 * @param Group    $group
+	 * @param Value    $value
+	 */
 	public function __construct( Language $lang, Name $name, Group $group, Value $value )
 	{
 		parent::__construct();
@@ -21,6 +36,9 @@ class MissingTranslationsController extends BaseController
 
 	}
 
+	/**
+	 * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+	 */
 	public function index()
 	{
 //		session()->forget('missing_translations');
@@ -29,6 +47,11 @@ class MissingTranslationsController extends BaseController
 		return $this->output( 'index', compact( 'translations' ) );
 	}
 
+	/**
+	 * @param Request $request
+	 *
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
 	public function store( Request $request )
 	{
 		$items = $request->get( 'keys', [ ] );
@@ -63,7 +86,7 @@ class MissingTranslationsController extends BaseController
 
 		session()->forget( 'missing_translations' );
 
-		return redirect()->to('/system/translations/groups');
+		return redirect()->to( '/system/translations/groups' );
 	}
 
 }

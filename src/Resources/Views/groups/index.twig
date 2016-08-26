@@ -3,6 +3,8 @@
 		<tr>
 			<td># ID</td>
 			<td>Title</td>
+			<td>Progress</td>
+			<td>Actions</td>
 		</tr>
 	</thead>
 
@@ -11,12 +13,14 @@
 			<tr>
 				<td>{{ key }}</td>
 				<td>{{ item }}</td>
+				<td>{{ progress[key]['translated'] }} out of {{ progress[key]['total'] }} translated ({{ progress[key]['percentage'] }}%)</td>
 				<td>
-					<form action="{{ route('donny5300.translations.groups.destroy', key) }}" method="post" class="btn-group">
+					<form action="{{ route('translations.groups.destroy', key) }}" method="post" class="btn-group">
 						<a href="/system/translations/groups/{{ key }}/edit" class="btn btn-info">Edit group</a>
 						{{ csrf_field() }}
+
 						<input type="submit" value="Delete" class="btn btn-danger">
-						<a href="{{ route('donny5300.translations.names.edit', key) }}" class="btn btn-success">Edit names</a>
+						<a href="{{ route('translations.names.edit', key) }}" class="btn btn-success">Edit names</a>
 
 					</form>
 				</td>

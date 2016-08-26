@@ -1,15 +1,10 @@
 <?php namespace Donny5300\Translations\Controllers;
 
-
-use Donny5300\Translations\Models\Group;
-use Donny5300\Translations\Models\Language;
-use Donny5300\Translations\Models\Name;
-use Donny5300\Translations\Models\Value;
-use Donny5300\Translations\Requests\StoreGroupRequest;
+use Donny5300\Translations\Repositories\GroupRepo;
+use Donny5300\Translations\Repositories\LanguageRepo;
+use Donny5300\Translations\Repositories\NameRepo;
+use Donny5300\Translations\Repositories\ValueRepo;
 use Donny5300\Translations\Requests\StoreNamesRequest;
-use Donny5300\Translations\Requests\UpdateGroupRequest;
-use Donny5300\Translations\Requests\UpdateNamesRequest;
-use Donny5300\Translations\TranslationBuilder;
 
 /**
  * Class NamesController
@@ -24,27 +19,15 @@ class NamesController extends BaseController
 	 */
 	protected $viewPath = 'names';
 
-	/**
-	 * NamesController constructor.
-	 *
-	 * @param Name     $name
-	 * @param Group    $group
-	 * @param Language $language
-	 * @param Value    $value
-	 */
-	public function __construct( Name $name, Group $group, Language $language, Value $value )
+
+	public function __construct( NameRepo $nameRepo, GroupRepo $groupRepo, LanguageRepo $languageRepo, ValueRepo $valueRepo )
 	{
 		parent::__construct();
 
-		$this->dataModel     = $name;
-		$this->groupModel    = $group;
-		$this->languageModel = $language;
-		$this->valueModel    = $value;
-		$this->groups        = ( new TranslationBuilder() )
-			->setDelimeter( ' > ' )
-			->setUcfirst()
-			->build()
-			->render();
+		$this->groupRepo    = $groupRepo;
+		$this->nameRepo     = $nameRepo;
+		$this->languageRepo = $languageRepo;
+		$this->valueRepo    = $valueRepo;
 	}
 
 	/**
@@ -52,9 +35,14 @@ class NamesController extends BaseController
 	 */
 	public function index()
 	{
-		$groups = $this->dataModel->whereNull( 'group_id' )->get();
+		$names = app( 'translations' )
+			->setUcFirst( false )
+			->setDelimeter( '.' )
+			->getNamesList();
 
-		return $this->output( 'index', compact( 'groups' ) );
+		$groups = $this->builder->getGroupList();
+
+		return $this->output( 'index', compact( 'groups', 'names' ) );
 	}
 
 	/**
@@ -62,84 +50,22 @@ class NamesController extends BaseController
 	 */
 	public function create()
 	{
-		$groups    = $this->groups;
-		$languages = $this->languageModel->all();
+		$groups    = app( 'translations' )->getGroupList();
+		$languages = $this->languageRepo->all();
 
 		return $this->output( 'create', compact( 'groups', 'languages' ) );
 	}
 
 	/**
 	 * @param StoreNamesRequest $request
+	 *
 	 * @return \Illuminate\Http\RedirectResponse
 	 */
 	public function store( StoreNamesRequest $request )
 	{
-		if( $name = $this->dataModel->storeOrUpdate( $request ) )
-		{
-			foreach( $request->get( 'translation_values', [ ] ) as $languageId => $value )
-			{
-				$this->valueModel->storeOrUpdate( $name->id, $value, $languageId );
-			}
+		$nameId = $this->nameRepo->storeOrUpdate( $request );
+		$this->valueRepo->storeOrUpdate( $request, $nameId );
 
-			return redirect()->back()->with('message', 'Created!');
-		}
-
-		return $this->backWithFailed();
-	}
-
-	/**
-	 * @param $id
-	 * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-	 */
-	public function edit( $id )
-	{
-		$group     = $this->groupModel->with( 'names.values' )->find( $id );
-		$languages = $this->languageModel->lists( 'title', 'id' )->toArray();
-		$groups    = $this->groups;
-
-		return $this->output( 'edit', compact( 'group', 'languages', 'groups' ) );
-	}
-
-	/**
-	 * @param UpdateNamesRequest $request
-	 * @param                    $id
-	 * @return \Illuminate\Http\RedirectResponse
-	 */
-	public function update( UpdateNamesRequest $request, $id )
-	{
-		$groups = $request->get( 'group_id', [ ] );
-
-		foreach( $request->get( 'title', [ ] ) as $key => $value )
-		{
-			$this->dataModel->updateItem( $key, $value, $this->getGroupId( $key, $groups ) );
-		}
-
-
-		foreach( $request->get( 'values', [ ] ) as $key => $language )
-		{
-			foreach( $language as $languageKey => $value )
-			{
-				$this->valueModel->storeOrUpdate( $key, $value, $languageKey );
-
-			}
-		}
-
-		return redirect()->back()->with('message', 'Values are updated!');
-	}
-
-	/**
-	 * @param $key
-	 * @param $groups
-	 * @return bool
-	 */
-	public function getGroupId( $key, $groups )
-	{
-		if( array_key_exists( $key, $groups ) )
-		{
-			return $groups[$key];
-		}
-
-		return false;
-
+		return $this->backToIndex();
 	}
 }

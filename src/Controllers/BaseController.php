@@ -9,18 +9,24 @@ use League\Flysystem\Filesystem;
 /**
  * Class AppControllersController
  *
+ * @property array data
  * @package Donny5300\Routing\Controllers
  */
 class BaseController extends Controller
 {
 	/**
-	 * @var string
+	 * @var bool
 	 */
-	protected $baseLink = 'donny5300.translations::';
+	protected $packageView = true;
 	/**
 	 * @var string
 	 */
-	protected $baseRoute = 'donny5300.';
+	protected $baseLink = 'donny5300.translations::';
+
+	/**
+	 * @var string
+	 */
+	protected $master = 'donny5300.translations::master';
 
 	/**
 	 * @var
@@ -42,37 +48,6 @@ class BaseController extends Controller
 	}
 
 	/**
-	 * @param bool|false $view
-	 * @param array      $data
-	 * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-	 */
-	public function output( $view = false, $data = [ ] )
-	{
-		$config         = $this->config;
-		$data['action'] = $this->getAction();
-
-		$data = array_merge( $config, $data );
-
-		$data['view'] = view( $this->buildPath( $view ), $data );
-
-		return view( 'donny5300.translations::master', $data );
-	}
-
-	/**
-	 * @param $view
-	 * @return string
-	 */
-	public function buildPath( $view )
-	{
-		if( array_key_exists( $this->viewPath, $this->config['system_views'] ) && $config = $this->config['system_views'][$this->viewPath] )
-		{
-			return $config . '.' . $view;
-		}
-
-		return $this->baseLink . $this->viewPath . '.' . $view;
-	}
-
-	/**
 	 * @return string
 	 */
 	public function getBaseLink()
@@ -81,44 +56,13 @@ class BaseController extends Controller
 	}
 
 	/**
-	 * @return \Illuminate\Http\RedirectResponse
-	 */
-	public function backWithFailed()
-	{
-		return redirect()->back()->with( 'message', 'Could not create item' );
-	}
-
-	/**
-	 * @param string $message
-	 * @param bool   $route
-	 * @return \Illuminate\Http\RedirectResponse
-	 */
-	public function backToIndex( $message = 'Item saved!', $route = false )
-	{
-		$message = is_null( $message ) ? 'Item saved' : 'Item deleted';
-
-		return redirect()->route( $this->getBackLink( $route ) )->with( 'message', $message );
-	}
-
-	/**
 	 * @param $route
+	 *
 	 * @return string
 	 */
 	public function getBackLink( $route )
 	{
-		if( $route )
-		{
-			return $route;
-		}
-
-		$view = $this->viewPath;
-		if( array_key_exists( $this->viewPath, $this->config['system_views'] ) )
-		{
-			$view = $this->config['system_views'][$this->viewPath];
-		}
-
-		return $this->baseRoute . 'translations.' . $view . '.index';
-
+		return $route ? $route : 'translations.' . $this->viewPath . '.index';
 	}
 
 	/**
@@ -143,22 +87,73 @@ class BaseController extends Controller
 	}
 
 	/**
-	 * @param $id
-	 * @return \Illuminate\Http\RedirectResponse
+	 * @param $view
+	 *
+	 * @return string
 	 */
-	public function destroy( $id )
+	public function buildPath( $view )
 	{
-		if( $this->dataModel->find( $id )->delete() )
-		{
-			return $this->backToIndex( 'Item is deleted' );
-		}
-
-		return $this->backWithFailed();
-
+		return $this->baseLink . $this->viewPath . '.' . $view;
 	}
 
-	public function back($message = '')
+	/**
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
+	public function backWithFailed()
+	{
+		return redirect()->back()->with( 'message', 'Could not create item' );
+	}
+
+	/**
+	 * @param string $message
+	 * @param bool   $route
+	 *
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
+	public function backToIndex( $message = 'Item saved!', $route = false )
+	{
+		$message = is_null( $message ) ? 'Item saved' : 'Item deleted';
+
+		return redirect()->route( $this->getBackLink( $route ) )->with( 'message', $message );
+	}
+
+	/**
+	 * @param string $message
+	 *
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
+	public function back( $message = '' )
 	{
 		return redirect()->back()->with( 'message', $message );
+	}
+
+	/**
+	 * @param bool|false $view
+	 * @param array      $data
+	 *
+	 * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+	 */
+	public function output( $view = false, $data = [ ] )
+	{
+		$config         = $this->config;
+		$data['action'] = $this->getAction();
+
+		$this->data              = array_merge( $config, $data );
+		$this->data['view_path'] = $this->buildPath( $view );
+
+		return $this->render();
+	}
+
+	/**
+	 * @return array|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+	 */
+	public function render()
+	{
+		if( !$this->packageView )
+		{
+			return $this->data;
+		}
+
+		return view( $this->master, $this->data );
 	}
 }

@@ -14,8 +14,8 @@ class StoreLanguageRequest extends Request
 	{
 		return [
 			'title'       => 'required|min:2',
-			'title_short_two'   => 'required|size:2',
-			'title_short_three' => 'required|size:3',
+			'short_two'   => 'required|size:2|unique:languages,short_two',
+			'short_three' => 'required|size:3',
 		];
 	}
 }

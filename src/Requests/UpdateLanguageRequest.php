@@ -13,9 +13,9 @@ class UpdateLanguageRequest extends Request
 	public function rules()
 	{
 		return [
-			'title'             => 'required|min:2',
-			'title_short_two'   => 'required|size:2',
-			'title_short_three' => 'required|size:3',
+			'title'       => 'required|min:2',
+			'short_two'   => 'required|size:2|unique:languages,short_two,' . $this->get( 'id' ),
+			'short_three' => 'required|size:3',
 		];
 	}
 }

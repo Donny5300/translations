@@ -1,24 +1,25 @@
 <div class="col-sm-12">
-	<form action="{{ route('donny5300.translations.languages.'~action, item.id) }}" method="post" class="form-horizontal">
+	<form action="{{ route('translations.languages.'~action, language.id) }}" method="post" class="form-horizontal">
 		{{ csrf_field() }}
+		<input name="id" type="hidden" value="{{ language.id }}">
 		<div class="form-group">
 			<label for="" class="control-label col-sm-3">Title</label>
 			<div class="col-sm-9">
-				<input type="text" name="title" value="{{ old('title', item.title) }}" class="form-control">
+				<input type="text" name="title" value="{{ old('title', language.title) }}" class="form-control">
 			</div>
 		</div>
 
 		<div class="form-group">
 			<label for="" class="control-label col-sm-3">Short two</label>
 			<div class="col-sm-9">
-				<input type="text" name="title_short_two" value="{{ old('title_short_two', item.title_short_two) }}" class="form-control">
+				<input type="text" name="short_two" value="{{ old('short_two', language.short_two) }}" class="form-control">
 			</div>
 		</div>
 
 		<div class="form-group">
 			<label for="" class="control-label col-sm-3">Short three</label>
 			<div class="col-sm-9">
-				<input type="text" name="title_short_three" value="{{ old('title_short_three', item.title_short_three) }}" class="form-control">
+				<input type="text" name="short_three" value="{{ old('short_three', language.short_three) }}" class="form-control">
 			</div>
 		</div>
 

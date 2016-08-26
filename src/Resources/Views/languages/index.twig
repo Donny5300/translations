@@ -13,11 +13,11 @@
 			<tr>
 				<td>{{ item.id }}</td>
 				<td>{{ item.title }}</td>
-				<td>{{ item.title_short_two }}</td>
-				<td>{{ item.title_short_three }}</td>
+				<td>{{ item.short_two }}</td>
+				<td>{{ item.short_three }}</td>
 				<td>
-					<form action="{{ route('donny5300.translations.languages.destroy', item.id) }}" method="post" class="btn-group">
-						<a href="/system/languages/{{ item.id }}/edit" class="btn btn-info">Edit</a>
+					<form action="{{ route('translations.languages.destroy', item.id) }}" method="post" class="btn-group">
+						<a href="/system/translations/languages/{{ item.id }}/edit" class="btn btn-info">Edit</a>
 						{{ csrf_field() }}
 						<input type="submit" value="Delete" class="btn btn-danger">
 					</form>

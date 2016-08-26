@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class BaseModel
@@ -14,13 +15,16 @@ class BaseModel extends Model
 	/**
 	 * @var array
 	 */
-	protected $fillable = [ 'id', 'title', 'name_id', 'language_id' ,'group_id'];
-
+	private static $methods = [ 'created', 'updated', 'deleting' ];
 	/**
 	 * @var array
 	 */
-	private static $methods = [ 'created', 'updated', 'deleting' ];
+	protected $fillable = [ 'id' ];
 
+	public function setTimestamps( $timestamps )
+	{
+		$this->timestamps = $timestamps;
+	}
 
 	/**
 	 *
@@ -29,13 +33,18 @@ class BaseModel extends Model
 	{
 		parent::boot();
 
-		foreach( self::$methods as $method )
+		$config = config( 'translations.cache' );
+
+		if( $config['auto_clear'] )
 		{
-			self::$method( function ( $item ) use ( $method )
+			foreach( self::$methods as $method )
 			{
-				app( 'cache' )->forget( 'translation_groups' );
-				app( 'cache' )->forget( 'translations' );
-			} );
+				self::$method( function () use ( $config )
+				{
+					cache()->forget( $config['key'] );
+				} );
+			}
 		}
+
 	}
 }

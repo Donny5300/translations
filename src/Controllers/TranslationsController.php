@@ -1,7 +1,6 @@
 <?php namespace Donny5300\Translations\Controllers;
 
 use App\Http\Controllers\Controller;
-use Donny5300\Translations\TranslationBuilder;
 
 /**
  * Class TranslationsController
@@ -10,20 +9,12 @@ use Donny5300\Translations\TranslationBuilder;
  */
 class TranslationsController extends Controller
 {
-	public function __construct()
-	{
-		$this->groups = ( new TranslationBuilder() )
-			->build()
-			->getTranslations();
-
-	}
-
 	/**
-	 *
+	 * @return array
 	 */
 	public function translations()
 	{
-		return $this->groups;
+		return app( 'translations' )->getTranslations();
 	}
 
 }

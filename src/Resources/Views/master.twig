@@ -43,8 +43,8 @@
 						<span class="caret"></span>
 					</a>
 					<ul class="dropdown-menu">
-						<li><a href="{{ route('donny5300.translations.languages.index') }}">Index</a></li>
-						<li><a href="{{ route('donny5300.translations.languages.create') }}">Add new</a></li>
+						<li><a href="{{ route('translations.languages.index') }}">Index</a></li>
+						<li><a href="{{ route('translations.languages.create') }}">Add new</a></li>
 					</ul>
 				</li>
 
@@ -54,29 +54,29 @@
 						<span class="caret"></span>
 					</a>
 					<ul class="dropdown-menu">
-						<li><a href="{{ route('donny5300.translations.groups.index') }}">Index</a></li>
-						<li><a href="{{ route('donny5300.translations.groups.create') }}">Add new</a></li>
+						<li><a href="{{ route('translations.groups.index') }}">Index</a></li>
+						<li><a href="{{ route('translations.groups.create') }}">Add new</a></li>
 					</ul>
 				</li>
 
 				<li>
-					<a href="{{ route('donny5300.translations.names.create') }}" class="dropdown-toggle">Names</a>
+					<a href="{{ route('translations.names.create') }}" class="dropdown-toggle">Names</a>
 				</li>
 
 
 
 			</ul>
-			<ul class="nav navbar-nav pull-right">
-				<li>
-					<a href="{{ route('donny5300.translations.missing_translations') }}">Add missing</a>
-				</li>
-				<li>
-					<a href="/{{ system_routes.base_path }}/{{ system_routes.sync }}">Sync</a>
-				</li>
-				<li>
-					<a href="/system/translations/clean-up">Clean up</a>
-				</li>
-			</ul>
+			{#<ul class="nav navbar-nav pull-right">#}
+				{#<li>#}
+					{#<a href="{{ route('translations.missing_translations') }}">Add missing</a>#}
+				{#</li>#}
+				{#<li>#}
+					{#<a href="/{{ system_routes.base_path }}/{{ system_routes.sync }}">Sync</a>#}
+				{#</li>#}
+				{#<li>#}
+					{#<a href="/system/translations/clean-up">Clean up</a>#}
+				{#</li>#}
+			{#</ul>#}
 		</div><!-- /.navbar-collapse -->
 	</div><!-- /.container-fluid -->
 </nav>
@@ -89,7 +89,7 @@
             <div class="col-sm-12">
 				{% include 'd5300.router::partials.errors' %}
 
-				{{ view | raw }}
+				{% include view_path | raw %}
 			</div>
 
         </div>

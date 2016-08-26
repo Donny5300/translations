@@ -1,6 +1,8 @@
 <?php namespace Donny5300\Translations;
 
 use Donny5300\ModulairRouter\Middleware\DevelopmentMode;
+use Donny5300\Translations\Events\TranslationsUpdated;
+use Illuminate\Events\Dispatcher;
 use Illuminate\Routing\Router as IlluminateRouter;
 use Donny5300\ModulairRouter\Middleware\CheckMissingRoute;
 
@@ -19,35 +21,11 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 	private $config;
 
 	/**
-	 * Register the service provider.
-	 *
-	 * @return void
+	 * @return string
 	 */
-	public function register()
+	public function getMigrationsPath()
 	{
-		$configPath = __DIR__ . '/../config/translations.php';
-		$this->mergeConfigFrom( $configPath, 'translations' );
-
-		include __DIR__ . '/Helpers.php';
-		include __DIR__ . '/routes.php';
-	}
-
-	/**
-	 * @param IlluminateRouter $router
-	 */
-	public function boot( IlluminateRouter $router )
-	{
-		$this->config = config( 'translations' );
-
-		$assetsPath = __DIR__ . '/../assets';
-		$migration  = __DIR__ . '/../migrations';
-		$configPath = __DIR__ . '/../config/translations.php';
-
-		$this->publishes( [ $configPath => $this->getConfigPath() ], 'config' );
-		$this->publishes( [ $assetsPath => $this->getAssetsPath() ], 'assets' );
-		$this->publishes( [ $migration => $this->getMigrationsPath() ], 'migrations' );
-
-		$this->loadViewsFrom( __DIR__ . '/Resources/Views/', 'donny5300.translations' );
+		return $this->app->databasePath() . '/migrations';
 	}
 
 	/**
@@ -58,14 +36,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 	protected function getRouter()
 	{
 		return $this->app['router'];
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getMigrationsPath()
-	{
-		return $this->app->databasePath() . '/migrations';
 	}
 
 	/**
@@ -103,5 +73,50 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 	{
 		$kernel = $this->app['Illuminate\Contracts\Http\Kernel'];
 		$kernel->pushMiddleware( $middleware );
+	}
+
+	/**
+	 *
+	 */
+	public function boot()
+	{
+		$this->config = config( 'translations' );
+
+		$assetsPath = __DIR__ . '/../assets';
+		$migration  = __DIR__ . '/../migrations';
+		$configPath = __DIR__ . '/../config/translations.php';
+
+		$this->publishes( [ $configPath => $this->getConfigPath() ], 'translations-config' );
+		$this->publishes( [ $assetsPath => $this->getAssetsPath() ], 'translations-assets' );
+		$this->publishes( [ $migration => $this->getMigrationsPath() ], 'translations-migration' );
+
+		$this->loadViewsFrom( __DIR__ . '/Resources/Views/', 'donny5300.translations' );
+
+		app()->singleton( 'translations', function ()
+		{
+			return new Builder;
+		} );
+
+		/**
+		 * If twig is defined, then load functions
+		 */
+		if( app()->offsetExists( 'twig' ) )
+		{
+			new TwigExtensions( app( 'twig' ), $this->config );
+		}
+	}
+
+	/**
+	 * Register the service provider.
+	 *
+	 * @return void
+	 */
+	public function register()
+	{
+		$configPath = __DIR__ . '/../config/translations.php';
+		$this->mergeConfigFrom( $configPath, 'translations' );
+
+		include __DIR__ . '/helpers.php';
+		include __DIR__ . '/routes.php';
 	}
 }

@@ -1,29 +1,22 @@
+{% set languageAmount = languages | length %}
+
 <div class="col-sm-12">
-	<form action="{{ route('donny5300.translations.groups.'~action, item.id) }}" method="post" class="form-horizontal">
+	<form action="{{ route('translations.groups.'~action, group.id) }}" method="post" class="form-horizontal">
 		{{ csrf_field() }}
 		<div class="form-group">
 			<label for="" class="control-label col-sm-3">Title</label>
 			<div class="col-sm-9">
-				<input type="text" name="title" value="{{ old('title', item.title) }}" class="form-control">
+				<input type="text" name="title" value="{{ old('title', group.title) }}" class="form-control">
 			</div>
 		</div>
-
-		<div class="form-group">
-			<label for="" class="control-label col-sm-3">Description</label>
-			<div class="col-sm-9">
-				<textarea name="description" id="" cols="30" rows="10" class="form-control">{{ old('description', item.description) }}</textarea>
-			</div>
-		</div>
-
-
 
 		<div class="form-group">
 			<label for="" class="control-label col-sm-3">Parent group</label>
 			<div class="col-sm-9">
 				<select name="group_id" id="" class="form-control">
-					<option value="0">None</option>
-					{% for key,group in groups %}
-						<option value="{{ key }}" {{ old('group_id', item.group_id) }}>{{ group }}</option>
+					<option value="">None</option>
+					{% for key,title in groups %}
+						<option value="{{ key }}" {{ old('group_id', group.group_id) == key ? 'selected' }}>{{ title }}</option>
 					{% endfor %}
 				</select>
 			</div>
@@ -34,6 +27,35 @@
 				<input type="submit" class="btn btn-success" value="Save">
 			</div>
 		</div>
+
+		<table class="table table-responsive table-striped">
+			<thead>
+				<tr>
+					<th>Name title</th>
+					<th>Language</th>
+					<th>Translation value</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for name in names %}
+					{% for value in name.values %}
+						<tr>
+							<td>
+								{% if loop.first %}
+									<input name="names[{{ name.id }}]" class="form-control" value="{{ name.title }}">
+								{% endif %}
+							</td>
+							<td>
+								{{ value.language.title }}
+							</td>
+							<td>
+								<input name="values[{{ value.id }}]" value="{{ value.title }}" class="form-control">
+							</td>
+						</tr>
+					{% endfor %}
+				{% endfor %}
+			</tbody>
+		</table>
 
 	</form>
 </div>

@@ -12,10 +12,13 @@ class Value extends BaseModel
 	 */
 	protected $table = 'values';
 
+	protected $fillable = [ 'uuid', 'guid', 'language_id', 'name_id' ];
+
 	/**
 	 * @param $nameId
 	 * @param $value
 	 * @param $languageId
+	 *
 	 * @return bool
 	 */
 	public function storeOrUpdate( $nameId, $value, $languageId )
@@ -49,6 +52,11 @@ class Value extends BaseModel
 		} );
 
 		self::insert( $names->toArray() );
+	}
+
+	public function language()
+	{
+		return $this->belongsTo( Language::class );
 	}
 
 	public function name()
