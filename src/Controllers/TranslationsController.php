@@ -14,7 +14,7 @@ class TranslationsController extends Controller
 	 */
 	public function translations()
 	{
-		return app( 'translations' )->getTranslations();
+		return translator()->getTranslations();
 	}
 
 }

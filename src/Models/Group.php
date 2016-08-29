@@ -12,7 +12,27 @@ class Group extends BaseModel
 	 */
 	protected $table = 'groups';
 
+	/**
+	 * @param      $request
+	 * @param null $id
+	 *
+	 * @return bool|\Illuminate\Database\Eloquent\Model
+	 */
+	public function storeOrUpdate( $request, $id = null )
+	{
+		$item = $this->withTrashed()->firstOrNew( [ 'id' => $id ] );
 
+		$item->title       = $request->title;
+		$item->group_id    = $request->group_id == 0 ? null : $request->group_id;
+		$item->description = $request->description;
+
+		if( $item->save() )
+		{
+			return $item;
+		}
+
+		return false;
+	}
 
 	/**
 	 *
@@ -35,35 +55,15 @@ class Group extends BaseModel
 	}
 
 	/**
-	 * @param      $request
-	 * @param null $id
-	 * @return bool|\Illuminate\Database\Eloquent\Model
-	 */
-	public function storeOrUpdate( $request, $id = null )
-	{
-		$item = $this->withTrashed()->firstOrNew( [ 'id' => $id ] );
-
-		$item->title       = $request->title;
-		$item->group_id    = $request->group_id == 0 ? null : $request->group_id;
-		$item->description = $request->description;
-
-		if( $item->save() )
-		{
-			return $item;
-		}
-
-		return false;
-	}
-
-	/**
 	 * @return mixed
 	 */
 	public function groups()
 	{
 		return $this->hasMany( self::class )
-			->select( [ 'id', 'title', 'group_id' ] )
+			->select( [ 'id', 'title', 'group_id', config( 'translations.database.id_field' ) ] )
 			->with( [ 'names' => function ( $q )
 			{
+
 				$q->select( [ 'id', 'title', 'group_id' ] );
 			}
 			] );

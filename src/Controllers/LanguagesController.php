@@ -57,7 +57,7 @@ class LanguagesController extends BaseController
 	 */
 	public function store( StoreLanguageRequest $request )
 	{
-		$lang = $this->languageRepo->storeOrUpdate( $request );
+		$lang = $this->languageRepo->storeOrUpdate( null, $request->title, $request->short_two, $request->short_three );
 		$old  = $this->languageRepo->first();
 
 		$this->valueRepo->copyToLanguage( $old->id, $lang->id );

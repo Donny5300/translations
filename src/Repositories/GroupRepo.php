@@ -46,11 +46,6 @@ class GroupRepo extends BaseRepository
 
 	public function getCurrentDepth( $groupId )
 	{
-		$relations = app('translations');
-		$record = $this->model->whereGroupId( $groupId )->with()->first();
-
-		dd( __LINE__ . ':[' . __FILE__ . ']' , $record);
-
 
 	}
 
@@ -69,17 +64,18 @@ class GroupRepo extends BaseRepository
 	}
 
 	/**
-	 * @param Request $request
-	 * @param null    $id
+	 * @param null $id
+	 * @param      $title
+	 * @param      $groupId
 	 *
 	 * @return mixed
 	 */
-	public function storeOrUpdate( Request $request, $id = null )
+	public function storeOrUpdate( $id = null, $title, $groupId )
 	{
 		$item = $this->model->firstOrNew( [ $this->idField => $id ] );
 
-		$item->title    = $request->get( 'title' );
-		$item->group_id = empty( $request->group_id ) ? null : $request->group_id;
+		$item->title    = $title;
+		$item->group_id = empty($groupId) ? null : $groupId;
 
 		return $item->save();
 	}

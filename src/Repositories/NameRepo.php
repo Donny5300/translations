@@ -26,7 +26,7 @@ class NameRepo extends BaseRepository
 	{
 		foreach( $names as $nameId => $name )
 		{
-			$item = $this->model->find($nameId);
+			$item        = $this->model->find( $nameId );
 			$item->title = $name;
 			$item->save();
 		}
@@ -38,12 +38,12 @@ class NameRepo extends BaseRepository
 	 *
 	 * @return mixed
 	 */
-	public function storeOrUpdate( Request $request, $id = null )
+	public function storeOrUpdate( $id = null, $title, $groupId )
 	{
 		$item = $this->model->firstOrNew( [ $this->getIdField() => $id ] );
 
-		$item->title    = $request->title;
-		$item->group_id = $request->group_id;
+		$item->title    = $title;
+		$item->group_id = $groupId;
 
 		$item->save();
 

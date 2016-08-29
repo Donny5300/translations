@@ -35,12 +35,12 @@ class NamesController extends BaseController
 	 */
 	public function index()
 	{
-		$names = app( 'translations' )
+		$names = translator()
 			->setUcFirst( false )
 			->setDelimeter( '.' )
-			->getNamesList();
+			->getGroupList();
 
-		$groups = $this->builder->getGroupList();
+		$groups = translator()->getGroupList();
 
 		return $this->output( 'index', compact( 'groups', 'names' ) );
 	}
@@ -50,7 +50,7 @@ class NamesController extends BaseController
 	 */
 	public function create()
 	{
-		$groups    = app( 'translations' )->getGroupList();
+		$groups    = translator()->getGroupList();
 		$languages = $this->languageRepo->all();
 
 		return $this->output( 'create', compact( 'groups', 'languages' ) );
@@ -63,8 +63,8 @@ class NamesController extends BaseController
 	 */
 	public function store( StoreNamesRequest $request )
 	{
-		$nameId = $this->nameRepo->storeOrUpdate( $request );
-		$this->valueRepo->storeOrUpdate( $request, $nameId );
+		$nameId = $this->nameRepo->storeOrUpdate( null, $request->title, $request->group_id );
+		$this->valueRepo->storeOrUpdate( null, $nameId, $request->get( 'translation_values', [ ] ) );
 
 		return $this->backToIndex();
 	}

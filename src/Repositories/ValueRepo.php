@@ -30,9 +30,9 @@ class ValueRepo extends BaseRepository
 	 * @param         $nameId
 	 * @param null    $id
 	 */
-	public function storeOrUpdate( Request $request, $nameId, $id = null )
+	public function storeOrUpdate( $id = null, $nameId, array $values )
 	{
-		foreach( array_filter( $request->get( 'translation_values', [ ] ) ) as $languageId => $value )
+		foreach( array_filter( $values ) as $languageId => $value )
 		{
 			$item        = $this->model->firstOrNew( [ $this->getIdField() => $id, 'language_id' => $languageId, 'name_id' => $nameId ] );
 			$item->title = $value;

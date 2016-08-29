@@ -19,8 +19,30 @@ class BaseModel extends Model
 	/**
 	 * @var array
 	 */
-	protected $fillable = [ 'id' ];
+	protected $fillable = [ 'id', 'uuid' ];
 
+	protected $appends = [ 'id_field' ];
+
+	public function getIdFieldAttribute()
+	{
+		$type = config( 'translations.database.id_field' );
+		if( array_key_exists( $type, $this->attributes ) )
+		{
+			return $this->attributes['id_field'] = $this->attributes[$type];
+		}
+	}
+
+	/**
+	 *
+	 */
+	public function setUuidAttribute()
+	{
+		$this->attributes['uuid'] = generate_uuid();
+	}
+
+	/**
+	 * @param $timestamps
+	 */
 	public function setTimestamps( $timestamps )
 	{
 		$this->timestamps = $timestamps;

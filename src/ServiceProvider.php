@@ -45,7 +45,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 	 */
 	protected function getConfigPath()
 	{
-		return config_path( 'routing.php' );
+		return config_path( 'translations.php' );
 	}
 
 	/**
@@ -92,7 +92,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
 		$this->loadViewsFrom( __DIR__ . '/Resources/Views/', 'donny5300.translations' );
 
-		app()->singleton( 'translations', function ()
+		app()->singleton( config('translations.helpers.singleton'), function ()
 		{
 			return new Builder;
 		} );

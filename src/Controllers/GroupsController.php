@@ -42,8 +42,8 @@ class GroupsController extends BaseController
 	 */
 	public function index()
 	{
-		$groups   = app( 'translations' )->getGroupList();
-		$progress = app( 'translations' )->getTranslationProgress();
+		$groups   = translator()->setGroupKeyByUuid()->getGroupList();
+		$progress = translator()->getTranslationProgress();
 
 		return $this->output( 'index', compact( 'groups', 'progress' ) );
 	}
@@ -53,7 +53,7 @@ class GroupsController extends BaseController
 	 */
 	public function create()
 	{
-		$groups = app( 'translations' )->setDelimeter(' > ')->setUcFirst()->getGroupList();
+		$groups = translator()->setDelimeter( ' > ' )->setUcFirst()->getGroupList();
 
 		return $this->output( 'create', compact( 'groups' ) );
 	}
@@ -65,7 +65,7 @@ class GroupsController extends BaseController
 	 */
 	public function store( StoreGroupRequest $request )
 	{
-		$this->groupRepo->storeOrUpdate( $request );
+		$this->groupRepo->storeOrUpdate( null, $request->title, $request->get( 'group_id', null ) );
 
 		return $this->backToIndex();
 	}
@@ -77,7 +77,7 @@ class GroupsController extends BaseController
 	 */
 	public function edit( $id )
 	{
-		$groups = app('translations')->getGroupList();
+		$groups = translator()->setDelimeter( ' > ' )->setUcFirst()->getGroupList();
 		$group  = $this->groupRepo->getItem( $id )
 			->load( 'names.values.language' );
 
@@ -94,7 +94,7 @@ class GroupsController extends BaseController
 	 */
 	public function update( UpdateGroupRequest $request, $id )
 	{
-		$this->groupRepo->storeOrUpdate( $request, $id );
+		$this->groupRepo->storeOrUpdate( $id, $request->title, $request->group_id );
 		$this->nameRepo->updateAll( $request->get( 'names', [ ] ) );
 		$this->valueRepo->updateAll( $request->get( 'values', [ ] ) );
 

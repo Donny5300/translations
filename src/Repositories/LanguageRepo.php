@@ -32,18 +32,20 @@ class LanguageRepo extends BaseRepository
 	}
 
 	/**
-	 * @param Request $request
-	 * @param null    $id
+	 * @param null $id
+	 * @param      $title
+	 * @param      $short_two
+	 * @param      $short_three
 	 *
 	 * @return mixed
 	 */
-	public function storeOrUpdate( Request $request, $id = null )
+	public function storeOrUpdate( $id = null, $title, $short_two, $short_three )
 	{
 		$item = $this->model->firstOrNew( [ $this->idField => $id ] );
 
-		$item->title       = $request->title;
-		$item->short_two   = $request->short_two;
-		$item->short_three = $request->short_three;
+		$item->title       = $title;
+		$item->short_two   = $short_two;
+		$item->short_three = $short_three;
 
 		$item->save();
 

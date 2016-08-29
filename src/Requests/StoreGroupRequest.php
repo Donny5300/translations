@@ -10,8 +10,8 @@ class StoreGroupRequest extends Request
 
 		validator()->extend( 'max_depth', function ( $name, $groupId ) use ( $groupRepo )
 		{
-			$groupRepo->getCurrentDepth($groupId);
-			dd( __LINE__ . ':[' . __FILE__ . ']', $item1, $item2, $item3 );
+//			$groupRepo->getCurrentDepth($groupId);
+//			dd( __LINE__ . ':[' . __FILE__ . ']', $item1, $item2, $item3 );
 
 		} );
 	}
@@ -20,7 +20,7 @@ class StoreGroupRequest extends Request
 	{
 		return [
 			'title'    => 'required|min:2',
-			'group_id' => 'max_depth'
+//			'group_id' => 'max_depth'
 		];
 	}
 }

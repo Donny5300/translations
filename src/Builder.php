@@ -10,7 +10,8 @@ use Donny5300\Translations\Repositories\NameRepo;
  * @property  GroupRepo                               groupRepo
  * @property \Illuminate\Foundation\Application|mixed nameRepo
  * @property  ucFirst
- * @package Donny5300\Translations
+ * @package Donny5300\Translations*
+ * @property  delimeter
  */
 class Builder
 {
@@ -44,8 +45,11 @@ class Builder
 	 */
 	public function getGroupList()
 	{
-		$list = [ ];
-		$this->createList( $this->getGroups(), $list );
+		$list   = [ ];
+		$groups = $this->getGroups();
+
+		$this->createList( $groups, $list );
+
 
 		return $list;
 	}
@@ -81,11 +85,11 @@ class Builder
 	public function getTranslationProgress()
 	{
 		$count  = [ ];
-		$groups = $this->groupRepo->all()->load( 'names.values' );
+		$groups = $this->groupRepo->all()->load( 'names.values' )->toArray();
 
 		foreach( $groups as $group )
 		{
-			$count[$group->id] = $this->calculateGroup( $group->names );
+			$count[$group[$this->getGroupKeyType()]] = $this->calculateGroup( $group['names'] );
 		}
 
 		return $count;
@@ -172,14 +176,17 @@ class Builder
 		return $groups[$name->group_id] . '.' . $name->title;
 	}
 
+	/**
+	 * @return mixed
+	 */
 	protected function getUcFirst()
 	{
 		if( $this->ucFirst )
 		{
 			return $this->ucFirst;
 		}
-		$this->config['list']['uc_first'];
-
+		
+		return $this->config['list']['uc_first'];
 	}
 
 	/**
@@ -245,6 +252,35 @@ class Builder
 	}
 
 	/**
+	 * @return string
+	 */
+	private function getGroupKeyType()
+	{
+		return $this->config['database']['id_field'];
+	}
+
+	/**
+	 * Calculates how many values are not empty
+	 *
+	 * @param $name
+	 *
+	 * @return int
+	 */
+	private function getTitleAmount( $name )
+	{
+		$total = 0;
+		foreach( $name['values'] as $value )
+		{
+			if( !empty( $value['title'] ) )
+			{
+				$total++;
+			}
+		}
+
+		return $total;
+	}
+
+	/**
 	 * Set the group name to ucfirst or not
 	 *
 	 * @param bool $ucfirst
@@ -271,8 +307,8 @@ class Builder
 		];
 		foreach( $names as $name )
 		{
-			$total['total'] += $name->values->pluck( 'title' )->count();
-			$total['translated'] += $name->values->pluck( 'title' )->filter()->count();
+			$total['total'] += count( $name['values'] );
+			$total['translated'] += $this->getTitleAmount( $name );
 		}
 
 		$total['percentage'] = $this->calculatePercentage( $total['total'], $total['translated'] );
@@ -299,7 +335,7 @@ class Builder
 	 *
 	 * @param $delimeter
 	 *
-	 * @return string
+	 * @return $this
 	 */
 	public function setDelimeter( $delimeter )
 	{
@@ -309,16 +345,14 @@ class Builder
 	}
 
 	/**
-	 * @param $groups
-	 *
 	 * @return $this
 	 */
-//	public function setGroups( $groups )
-//	{
-//		$this->groups = $groups->toArray();
-//
-//		return $this;
-//	}
+	public function setGroupKeyByUuid()
+	{
+		$this->keyByUuid = true;
+
+		return $this;
+	}
 
 	/**
 	 * @return array
@@ -338,8 +372,9 @@ class Builder
 		{
 			foreach( $name->values as $value )
 			{
-				$langKey                      = $value->language->short_two;
-				$key                          = $this->getTranslationKey( $groups, $name );
+				$langKey = $value->language->short_two;
+				$key     = $this->getTranslationKey( $groups, $name );
+
 				$translations[$langKey][$key] = $value->title;
 			}
 		}
@@ -358,8 +393,8 @@ class Builder
 	{
 		foreach( $in as $data )
 		{
-			$title            = $this->getGroupTitle( $path, $data['title'] );
-			$out[$data['id']] = $title;
+			$title                                = $this->getGroupTitle( $path, $data['title'] );
+			$out[$data[$this->getGroupKeyType()]] = $title;
 			if( count( $data['groups'] ) > 0 )
 			{
 				$this->createList( $data['groups'], $out, $title );

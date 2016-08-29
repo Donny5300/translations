@@ -1,7 +1,6 @@
 {% set languageAmount = languages | length %}
-
 <div class="col-sm-12">
-	<form action="{{ route('translations.groups.'~action, group.id) }}" method="post" class="form-horizontal">
+	<form action="{{ route('translations.groups.'~action, group.id_field) }}" method="post" class="form-horizontal">
 		{{ csrf_field() }}
 		<div class="form-group">
 			<label for="" class="control-label col-sm-3">Title</label>
