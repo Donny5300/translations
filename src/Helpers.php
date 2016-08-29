@@ -19,10 +19,14 @@
 
 	if( !function_exists( 'translator' ) )
 	{
+		/**
+		 * @return \Donny5300\Translations\Builder
+		 */
+		function translator()
+		{
+			return app( 'translations' );
+		}
 
-		/** @var Donny5300\Translations\Builder $translator */
-		$translator = app( 'translations' );
-		return $translator;
 	}
 
 
