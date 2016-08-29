@@ -17,4 +17,12 @@
 		}
 	}
 
+	if( !function_exists( 'translator' ) )
+	{
+
+		/** @var Donny5300\Translations\Builder $translator */
+		$translator = app( 'translations' );
+		return $translator;
+	}
+
 
