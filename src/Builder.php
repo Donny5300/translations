@@ -9,9 +9,9 @@ use Donny5300\Translations\Repositories\NameRepo;
  *
  * @property  GroupRepo                               groupRepo
  * @property \Illuminate\Foundation\Application|mixed nameRepo
- * @property  ucFirst
+ * @property  bool                                    ucFirst
  * @package Donny5300\Translations*
- * @property  delimeter
+ * @property string                                   delimeter
  */
 class Builder
 {
@@ -173,19 +173,22 @@ class Builder
 	 */
 	protected function getTranslationKey( $groups, $name )
 	{
-		return $groups[$name->group_id] . '.' . $name->title;
+		if( array_key_exists( $name->group_id, $groups ) )
+		{
+			return $groups[$name->group_id] . '.' . $name->title;
+		}
 	}
 
 	/**
-	 * @return mixed
+	 * @return bool
 	 */
 	protected function getUcFirst()
 	{
-		if( $this->ucFirst )
+		if( isset( $this->ucFirst ) )
 		{
 			return $this->ucFirst;
 		}
-		
+
 		return $this->config['list']['uc_first'];
 	}
 
@@ -374,8 +377,10 @@ class Builder
 			{
 				$langKey = $value->language->short_two;
 				$key     = $this->getTranslationKey( $groups, $name );
-
-				$translations[$langKey][$key] = $value->title;
+				if( !empty( $key ) )
+				{
+					$translations[$langKey][$key] = $value->title;
+				}
 			}
 		}
 

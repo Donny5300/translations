@@ -63,9 +63,11 @@ class NamesController extends BaseController
 	 */
 	public function store( StoreNamesRequest $request )
 	{
+
 		$nameId = $this->nameRepo->storeOrUpdate( null, $request->title, $request->group_id );
+
 		$this->valueRepo->storeOrUpdate( null, $nameId, $request->get( 'translation_values', [ ] ) );
 
-		return $this->backToIndex();
+		return redirect()->to('system/translations/groups');
 	}
 }

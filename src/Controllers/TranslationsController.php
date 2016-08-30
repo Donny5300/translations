@@ -14,7 +14,10 @@ class TranslationsController extends Controller
 	 */
 	public function translations()
 	{
-		return translator()->getTranslations();
+		return translator()
+			->setUcFirst( false )
+			->setDelimeter( '.' )
+			->getTranslations();
 	}
 
 }
